@@ -2,7 +2,8 @@ import subprocess
 import sys
 
 import qpageview
-from PyQt5.QtWidgets import QApplication, QGridLayout, QMainWindow, QWidget, QLabel, QPushButton, QFileDialog
+from PyQt5.QtWidgets import QApplication, QGridLayout, QMainWindow, QWidget, QLabel, QPushButton, QFileDialog, \
+    QMessageBox
 from os.path import expanduser
 import os.path
 from pathlib import Path
@@ -39,20 +40,32 @@ class MainWindow(QMainWindow):
         else:
             print('No config file found.')
 
-    def open_file_dialog(self):
-        filename, ok = QFileDialog.getOpenFileName(
-            self, "Выберите файл", '/', "PDF Files (*.pdf)"
-        )
-        if ok:
-            fname = str(Path(filename))
-            doc = qpageview.loadPdf(fname)
-            self.v.setDocument(doc)
-            self.pages = self.v.pages()
-            self.numpages = len(self.pages)
-            self.current_page = 0
-            self.pagenumberlabel.setText(f'Страница {self.current_page + 1} из {self.numpages}')
+    # def open_file_dialog(self):
+    #     filename, ok = QFileDialog.getOpenFileName(
+    #         self, "Выберите файл", '/', "PDF Files (*.pdf)"
+    #     )
+    #     if ok:
+    #         fname = str(Path(filename))
+    #         doc = qpageview.loadPdf(fname)
+    #         self.v.setDocument(doc)
+    #         self.pages = self.v.pages()
+    #         self.numpages = len(self.pages)
+    #         self.current_page = 0
+    #         self.pagenumberlabel.setText(f'Страница {self.current_page + 1} из {self.numpages}')
 
     def __init__(self):
+        error_message = False
+        if len(sys.argv) < 2:
+            error_message = 'Не задан PDF-файл для открытия'
+        elif not os.path.isfile(sys.argv[1].strip()):
+            error_message = 'Указанный файл не существует'
+        elif not sys.argv[1].strip().endswith('pdf'):
+            error_message = 'Файл не является PDF-файлом'
+        if error_message:
+            dlg = QMessageBox(QMessageBox.Warning, 'Внимание', error_message)
+            dlg.exec_()
+            sys.exit()
+
         QMainWindow.__init__(self)
 
         self.setWindowTitle("welcome-pages")
@@ -73,21 +86,21 @@ class MainWindow(QMainWindow):
         self.numpages = len(self.pages)
         self.current_page = 0
 
-        open_file_button = QPushButton("Выберите файл")
-        open_file_button.clicked.connect(self.open_file_dialog)
-        grid_layout.addWidget(open_file_button, 0, 0, 1, 3)
-        grid_layout.addWidget(self.v, 1, 0, 1, 3)
+        # open_file_button = QPushButton("Выберите файл")
+        # open_file_button.clicked.connect(self.open_file_dialog)
+        # grid_layout.addWidget(open_file_button, 0, 0, 1, 3)
+        grid_layout.addWidget(self.v, 0, 0, 1, 3)
         back = QPushButton('Назад')
         nomoreshow = QPushButton('Больше не показывать')
         fwd = QPushButton('Вперёд')
         back.clicked.connect(self.prev_page)
         fwd.clicked.connect(self.next_page)
         nomoreshow.clicked.connect(self.remove_link)
-        grid_layout.addWidget(back, 2, 0)
-        grid_layout.addWidget(fwd, 2, 2)
-        grid_layout.addWidget(nomoreshow, 2, 1)
+        grid_layout.addWidget(back, 1, 0)
+        grid_layout.addWidget(fwd, 1, 2)
+        grid_layout.addWidget(nomoreshow, 1, 1)
         self.pagenumberlabel = QLabel(f'Страница 1 из {self.numpages}')
-        grid_layout.addWidget(self.pagenumberlabel, 3, 0, 1, 2)
+        grid_layout.addWidget(self.pagenumberlabel, 2, 0, 1, 2)
         central_widget.setLayout(grid_layout)
         self.showMaximized()
 
