@@ -22,17 +22,34 @@ class pageView(qpageview.View):
 
 class MainWindow(QMainWindow):
 
+    def show_send_statistics_window(self):
+        dlg = QMessageBox.question(self, 'Внимание!', 'Вы соглашаетесь на отправку анонимной статистики.',
+                                   QMessageBox.Ok | QMessageBox.Cancel)
+        if dlg == QMessageBox.Ok:
+            print('Yes')
+        else:
+            print('No')
+
     def next_page(self):
         if self.current_page < self.numpages - 1:
             self.v.gotoNextPage()
             self.current_page += 1
             self.pagenumberlabel.setText(f'Страница {self.current_page + 1} из {self.numpages}')
+            if self.current_page == self.numpages - 1:
+                self.fwd.clicked.disconnect()
+                self.fwd.clicked.connect(self.show_send_statistics_window)
+                self.fwd.setText('Отправлять анонимную статистику')
+                return
 
     def prev_page(self):
         if self.current_page > 0:
             self.v.gotoPreviousPage()
             self.current_page -= 1
             self.pagenumberlabel.setText(f'Страница {self.current_page + 1} из {self.numpages}')
+            if self.current_page == self.numpages - 2:
+                self.fwd.clicked.disconnect()
+                self.fwd.clicked.connect(self.next_page)
+                self.fwd.setText('Вперёд')
 
     def remove_link(self):
         if os.path.isfile(f'{expanduser("~")}/.config/autostart/{config_filename}'):
@@ -92,12 +109,12 @@ class MainWindow(QMainWindow):
         grid_layout.addWidget(self.v, 0, 0, 1, 3)
         back = QPushButton('Назад')
         nomoreshow = QPushButton('Больше не показывать')
-        fwd = QPushButton('Вперёд')
+        self.fwd = QPushButton('Вперёд')
         back.clicked.connect(self.prev_page)
-        fwd.clicked.connect(self.next_page)
+        self.fwd.clicked.connect(self.next_page)
         nomoreshow.clicked.connect(self.remove_link)
         grid_layout.addWidget(back, 1, 0)
-        grid_layout.addWidget(fwd, 1, 2)
+        grid_layout.addWidget(self.fwd, 1, 2)
         grid_layout.addWidget(nomoreshow, 1, 1)
         self.pagenumberlabel = QLabel(f'Страница 1 из {self.numpages}')
         grid_layout.addWidget(self.pagenumberlabel, 2, 0, 1, 2)
