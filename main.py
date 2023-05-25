@@ -1,12 +1,10 @@
+import os.path
 import subprocess
 import sys
+from os.path import expanduser
 
 import qpageview
-from PyQt5.QtWidgets import QApplication, QGridLayout, QMainWindow, QWidget, QLabel, QPushButton, QFileDialog, \
-    QMessageBox
-from os.path import expanduser
-import os.path
-from pathlib import Path
+from PyQt5.QtWidgets import QApplication, QGridLayout, QMainWindow, QWidget, QLabel, QPushButton, QMessageBox
 
 config_filename = 'welcome-pages.desktop'
 
@@ -57,19 +55,6 @@ class MainWindow(QMainWindow):
         else:
             print('No config file found.')
 
-    # def open_file_dialog(self):
-    #     filename, ok = QFileDialog.getOpenFileName(
-    #         self, "Выберите файл", '/', "PDF Files (*.pdf)"
-    #     )
-    #     if ok:
-    #         fname = str(Path(filename))
-    #         doc = qpageview.loadPdf(fname)
-    #         self.v.setDocument(doc)
-    #         self.pages = self.v.pages()
-    #         self.numpages = len(self.pages)
-    #         self.current_page = 0
-    #         self.pagenumberlabel.setText(f'Страница {self.current_page + 1} из {self.numpages}')
-
     def __init__(self):
         error_message = False
         if len(sys.argv) < 2:
@@ -91,7 +76,7 @@ class MainWindow(QMainWindow):
         grid_layout = QGridLayout()
 
         self.v = pageView()
-        doc = qpageview.loadPdf("/home/user/Загрузки/manual.pdf")
+        doc = qpageview.loadPdf(sys.argv[1])
         self.v.setDocument(doc)
         self.v.setViewMode(qpageview.FitBoth)
         self.v.setContinuousMode(False)
@@ -103,10 +88,8 @@ class MainWindow(QMainWindow):
         self.numpages = len(self.pages)
         self.current_page = 0
 
-        # open_file_button = QPushButton("Выберите файл")
-        # open_file_button.clicked.connect(self.open_file_dialog)
-        # grid_layout.addWidget(open_file_button, 0, 0, 1, 3)
         grid_layout.addWidget(self.v, 0, 0, 1, 3)
+
         back = QPushButton('Назад')
         nomoreshow = QPushButton('Больше не показывать')
         self.fwd = QPushButton('Вперёд')
