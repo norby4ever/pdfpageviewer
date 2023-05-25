@@ -1,0 +1,22 @@
+[Desktop Entry]
+Categories=System;Configuration;
+Comment[ru_RU]=Обзор возможностей системы
+Comment=System review
+Exec=/usr/bin/python3 /usr/bin/welcome-pages
+GenericName[ru_RU]=
+GenericName=
+MimeType=
+Name[ru_RU]=Приветственный файл
+Name=Welcome pages
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+Version=1.0
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
+X-SnapInstanceName=welcome-pages
+
