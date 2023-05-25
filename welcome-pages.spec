@@ -2,7 +2,7 @@ Summary:	Welcome pages for M OS
 Summary(ru_RU.UTF-8): Приветственный PDF-файл для М ОС
 Name:		welcome-pages
 Version:	1.0
-Release:	1
+Release:	2
 License:	GPLv3
 Group:		System/Configuration/Other
 Url:		https://github.com/norby4ever/pdfpageviewer
