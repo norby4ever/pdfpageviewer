@@ -31,6 +31,7 @@ class MainWindow(QMainWindow):
             print('No')
 
     def next_page(self):
+        self.back_btn.setEnabled(True)
         if self.current_page < self.numpages - 1:
             self.v.gotoNextPage()
             self.current_page += 1
@@ -38,10 +39,11 @@ class MainWindow(QMainWindow):
             if self.current_page == self.numpages - 1:
                 self.fwd.clicked.disconnect()
                 self.fwd.clicked.connect(self.show_send_statistics_window)
-                self.fwd.setText('Отправлять анонимную статистику')
+                self.fwd.setText('Хочу помочь сбору статистики')
                 return
 
     def prev_page(self):
+        self.fwd.setEnabled(True)
         if self.current_page > 0:
             self.v.gotoPreviousPage()
             self.current_page -= 1
@@ -50,6 +52,8 @@ class MainWindow(QMainWindow):
                 self.fwd.clicked.disconnect()
                 self.fwd.clicked.connect(self.next_page)
                 self.fwd.setText('Вперёд')
+        if self.current_page == 0:
+            self.back_btn.setDisabled(True)
 
     def remove_link(self):
         if os.path.isfile(f'{expanduser("~")}/.config/autostart/{config_filename}'):
@@ -92,19 +96,20 @@ class MainWindow(QMainWindow):
 
         grid_layout.addWidget(self.v, 0, 0, 1, 3)
 
-        back = QPushButton('Назад')
+        self.back_btn = QPushButton('Назад')
         nomoreshow = QPushButton('Больше не показывать')
         self.fwd = QPushButton('Вперёд')
-        back.clicked.connect(self.prev_page)
+        self.back_btn.clicked.connect(self.prev_page)
         self.fwd.clicked.connect(self.next_page)
         nomoreshow.clicked.connect(self.remove_link)
-        grid_layout.addWidget(back, 1, 0)
+        grid_layout.addWidget(self.back_btn, 1, 0)
         grid_layout.addWidget(self.fwd, 1, 2)
+        self.back_btn.setDisabled(True)
         grid_layout.addWidget(nomoreshow, 1, 1)
         self.pagenumberlabel = QLabel(f'Страница 1 из {self.numpages}')
         grid_layout.addWidget(self.pagenumberlabel, 2, 0, 1, 2)
         central_widget.setLayout(grid_layout)
-        self.showMaximized()
+        self.showFullScreen()
 
 
 if __name__ == '__main__':
