@@ -24,11 +24,15 @@ class MainWindow(QMainWindow):
 
     def show_send_statistics_window(self):
         dlg = QMessageBox.question(self, 'Внимание!', 'Вы соглашаетесь на отправку анонимной статистики.',
-                                   QMessageBox.Ok | QMessageBox.Cancel)
-        if dlg == QMessageBox.Ok:
+                                   QMessageBox.Yes | QMessageBox.No | QMessageBox.Cancel)
+        if dlg == QMessageBox.Yes:
             print('Yes')
-        else:
+            sys.exit()
+        elif dlg == QMessageBox.No:
             print('No')
+            sys.exit()
+        else:
+            print('Cancel')
 
     def next_page(self):
         self.back_btn.setEnabled(True)
@@ -60,6 +64,7 @@ class MainWindow(QMainWindow):
             subprocess.run(f'rm -rf {expanduser("~")}/.config/autostart/{config_filename}')
         else:
             print('No config file found.')
+        sys.exit()
 
     def __init__(self):
         error_message = False
