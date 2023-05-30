@@ -1,13 +1,14 @@
 Summary:	Welcome pages for M OS
 Summary(ru_RU.UTF-8): Приветственный PDF-файл для М ОС
 Name:		welcome-pages
-Version:	1.0
-Release:	2
+Version:	1.1
+Release:	1
 License:	GPLv3
 Group:		System/Configuration/Other
 Url:		https://github.com/norby4ever/pdfpageviewer
 Source1:	main.py
 Source2:	welcome-pages.desktop
+Source3:	welcome-pages.svg
 
 Requires:	python3-qtpy
 Requires:	python3-qpageview
@@ -27,6 +28,7 @@ Shows welcome PDF-file when system runs the first time, allows enable sending an
 %{_datadir}/%{name}/main.py
 %{_sysconfdir}/.config/autostart/welcome-pages.desktop
 %{_bindir}/%{name}
+%{_iconsdir}/hicolor/scalable/apps/welcome-pages.svg
 
 #------------------------------------------------------------------
 
@@ -44,3 +46,6 @@ ln -s ../share/%{name}/main.py %{buildroot}%{_bindir}/%{name}
 
 mkdir -p %{buildroot}%{_sysconfdir}/.config/autostart
 install -m644 welcome-pages.desktop %{buildroot}%{_sysconfdir}/.config/autostart/welcome-pages.desktop
+
+mkdir -p %{buildroot}%{_iconsdir}/hicolor/scalable/apps
+install -m644 welcome-pages.svg %{buildroot}%{_iconsdir}/hicolor/scalable/apps/welcome-pages.svg

@@ -5,6 +5,7 @@ Comment=System review
 Exec=/usr/bin/python3 /usr/bin/welcome-pages
 GenericName[ru_RU]=
 GenericName=
+Icon=welcome-pages
 MimeType=
 Name[ru_RU]=Приветственный файл
 Name=Welcome pages
